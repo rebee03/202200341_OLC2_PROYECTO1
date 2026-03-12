@@ -1,87 +1,220 @@
+/* static/style.css */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+    --bg:          #1e1e2e;
+    --surface:     #2a2a3e;
+    --surface2:    #313145;
+    --border:      #44446a;
+    --accent:      #7c83fd;
+    --accent2:     #56cfb2;
+    --danger:      #e06c75;
+    --text:        #cdd6f4;
+    --text-muted:  #6c7086;
+    --console-bg:  #11111b;
+    --header-bg:   #1a1a2e;
+}
+
 body {
-    background-color: #1e1e2f;
-    color: #f0f0f0;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    margin: 0;
-    padding: 20px;
+    font-family: 'Segoe UI', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    height: 100vh;
     display: flex;
     flex-direction: column;
-    align-items: center;
-}
-
-h2 {
-    color: #ffcc00;
-    margin-bottom: 20px;
-}
-
-form {
-    width: 100%;
-    max-width: 800px;
-    margin-bottom: 20px;
-}
-
-/* Editor container */
-.editor-container {
-    display: flex;
-    border-radius: 10px;
     overflow: hidden;
-    background-color: #2e2e44;
-    border: 1px solid #444;
-    height: 300px;
-    width: 100%;
+}
+
+/* ── Toolbar ──────────────────────────────────── */
+.toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: var(--header-bg);
+    border-bottom: 1px solid var(--border);
+    padding: 8px 16px;
+    flex-shrink: 0;
+}
+
+.toolbar-title {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--accent);
+    letter-spacing: .5px;
+}
+
+.toolbar-actions {
+    display: flex;
+    gap: 8px;
+}
+
+/* ── Botones ──────────────────────────────────── */
+.btn {
+    padding: 6px 14px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: .85rem;
+    font-weight: 500;
+    transition: opacity .15s, transform .1s;
+}
+.btn:hover:not(:disabled) { opacity: .85; transform: translateY(-1px); }
+.btn:disabled { opacity: .4; cursor: not-allowed; }
+
+.btn-primary   { background: var(--accent);  color: #fff; }
+.btn-secondary { background: var(--surface2); color: var(--text); border: 1px solid var(--border); }
+.btn-danger    { background: var(--danger);  color: #fff; }
+.btn-report    { background: var(--surface2); color: var(--text);
+                 border: 1px solid var(--border); width: 100%;
+                 text-align: left; padding: 8px 12px; border-radius: 5px;
+                 cursor: pointer; font-size: .85rem; }
+.btn-report:hover:not(:disabled) { background: var(--border); }
+
+/* ── Workspace ────────────────────────────────── */
+.workspace {
+    display: flex;
+    flex: 1;
+    overflow: hidden;
+    gap: 0;
+}
+
+/* ── Panel header ─────────────────────────────── */
+.panel-header {
+    background: var(--surface2);
+    border-bottom: 1px solid var(--border);
+    padding: 6px 14px;
+    font-size: .8rem;
+    font-weight: 600;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: .8px;
+}
+
+/* ── Editor ───────────────────────────────────── */
+.editor-panel {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    border-right: 1px solid var(--border);
+    min-width: 0;
+}
+
+.editor-wrapper {
+    display: flex;
+    flex: 1;
+    overflow: hidden;
 }
 
 .line-numbers {
-    background-color: #2a2a3d;
-    color: #888;
-    font-family: monospace;
-    font-size: 14px;
+    background: var(--surface);
+    color: var(--text-muted);
+    font-family: 'Consolas', 'Fira Code', monospace;
+    font-size: .88rem;
+    line-height: 1.6;
+    padding: 12px 8px;
     text-align: right;
-    padding: 10px 5px; /* un poquito de espacio interno */
     user-select: none;
-    white-space: pre; /* importante: preserva saltos de línea */
-    line-height: 1.4em; /* igual al line-height del textarea */
+    min-width: 42px;
+    white-space: pre;
+    overflow: hidden;
+    border-right: 1px solid var(--border);
 }
 
-textarea {
+#editor {
     flex: 1;
+    background: var(--surface);
+    color: var(--text);
+    font-family: 'Consolas', 'Fira Code', monospace;
+    font-size: .88rem;
+    line-height: 1.6;
+    padding: 12px;
     border: none;
-    outline: none;
-    background: none;
-    color: #f0f0f0;
-    font-family: monospace;
-    font-size: 14px;
-    line-height: 1.4em; /* mismo que .line-numbers */
-    padding: 10px;
     resize: none;
-    box-sizing: border-box; /* importante */
+    outline: none;
+    overflow: auto;
+    tab-size: 4;
+    white-space: pre;
 }
 
-
-input[type="submit"] {
-    margin-top: 10px;
-    padding: 10px 20px;
-    background-color: #ffcc00;
-    color: #1e1e2f;
-    border: none;
-    border-radius: 8px;
-    font-weight: bold;
-    cursor: pointer;
-    transition: background-color 0.2s;
+/* ── Panel derecho ────────────────────────────── */
+.right-panel {
+    width: 360px;
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
 }
 
-input[type="submit"]:hover {
-    background-color: #e6b800;
+/* ── Consola ──────────────────────────────────── */
+.console-panel {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    border-bottom: 1px solid var(--border);
+    min-height: 0;
 }
 
 .console {
-    width: 100%;
-    max-width: 800px;
-    background-color: #2e2e44;
-    padding: 15px;
-    border-radius: 10px;
-    font-family: monospace;
-    white-space: pre; /* mejor que pre-wrap para salida exacta */
-    min-height: 50px;
-    overflow-x: auto; /* para líneas largas */
+    flex: 1;
+    background: var(--console-bg);
+    color: var(--accent2);
+    font-family: 'Consolas', 'Fira Code', monospace;
+    font-size: .85rem;
+    line-height: 1.6;
+    padding: 12px;
+    overflow: auto;
+    white-space: pre-wrap;
+    word-break: break-word;
 }
+
+/* ── Reportes ─────────────────────────────────── */
+.reports-panel {
+    display: flex;
+    flex-direction: column;
+    background: var(--surface);
+    overflow-y: auto;
+}
+
+.report-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    padding: 10px;
+}
+
+.report-buttons form { margin: 0; }
+
+/* ── Tabla de errores inline ──────────────────── */
+.error-preview {
+    padding: 10px;
+    border-top: 1px solid var(--border);
+}
+
+.error-count {
+    font-size: .8rem;
+    color: var(--danger);
+    margin-bottom: 6px;
+}
+
+.report-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: .75rem;
+}
+
+.report-table th {
+    background: var(--surface2);
+    color: var(--text-muted);
+    padding: 4px 6px;
+    text-align: left;
+    border-bottom: 1px solid var(--border);
+}
+
+.report-table td {
+    padding: 4px 6px;
+    border-bottom: 1px solid var(--border);
+    color: var(--text);
+    word-break: break-word;
+}
+
+.report-table tr:hover td { background: var(--surface2); }

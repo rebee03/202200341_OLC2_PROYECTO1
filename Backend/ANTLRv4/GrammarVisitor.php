@@ -111,15 +111,6 @@ interface GrammarVisitor extends ParseTreeVisitor
 	public function visitBlock(Context\BlockContext $context);
 
 	/**
-	 * Visit a parse tree produced by {@see GrammarParser::statementList()}.
-	 *
-	 * @param Context\StatementListContext $context The parse tree.
-	 *
-	 * @return mixed The visitor result.
-	 */
-	public function visitStatementList(Context\StatementListContext $context);
-
-	/**
 	 * Visit a parse tree produced by {@see GrammarParser::statement()}.
 	 *
 	 * @param Context\StatementContext $context The parse tree.
@@ -163,6 +154,15 @@ interface GrammarVisitor extends ParseTreeVisitor
 	 * @return mixed The visitor result.
 	 */
 	public function visitAssignOp(Context\AssignOpContext $context);
+
+	/**
+	 * Visit a parse tree produced by {@see GrammarParser::incDecStmt()}.
+	 *
+	 * @param Context\IncDecStmtContext $context The parse tree.
+	 *
+	 * @return mixed The visitor result.
+	 */
+	public function visitIncDecStmt(Context\IncDecStmtContext $context);
 
 	/**
 	 * Visit a parse tree produced by {@see GrammarParser::expressionStmt()}.
@@ -244,6 +244,15 @@ interface GrammarVisitor extends ParseTreeVisitor
 	 * @return mixed The visitor result.
 	 */
 	public function visitForStmt(Context\ForStmtContext $context);
+
+	/**
+	 * Visit a parse tree produced by {@see GrammarParser::forClause()}.
+	 *
+	 * @param Context\ForClauseContext $context The parse tree.
+	 *
+	 * @return mixed The visitor result.
+	 */
+	public function visitForClause(Context\ForClauseContext $context);
 
 	/**
 	 * Visit a parse tree produced by {@see GrammarParser::expression()}.
@@ -336,15 +345,6 @@ interface GrammarVisitor extends ParseTreeVisitor
 	public function visitQualifiedIdent(Context\QualifiedIdentContext $context);
 
 	/**
-	 * Visit a parse tree produced by {@see GrammarParser::actualArgs()}.
-	 *
-	 * @param Context\ActualArgsContext $context The parse tree.
-	 *
-	 * @return mixed The visitor result.
-	 */
-	public function visitActualArgs(Context\ActualArgsContext $context);
-
-	/**
 	 * Visit a parse tree produced by {@see GrammarParser::literal()}.
 	 *
 	 * @param Context\LiteralContext $context The parse tree.
@@ -370,6 +370,24 @@ interface GrammarVisitor extends ParseTreeVisitor
 	 * @return mixed The visitor result.
 	 */
 	public function visitArrayLiteral(Context\ArrayLiteralContext $context);
+
+	/**
+	 * Visit a parse tree produced by {@see GrammarParser::arrayElements()}.
+	 *
+	 * @param Context\ArrayElementsContext $context The parse tree.
+	 *
+	 * @return mixed The visitor result.
+	 */
+	public function visitArrayElements(Context\ArrayElementsContext $context);
+
+	/**
+	 * Visit a parse tree produced by {@see GrammarParser::arrayElement()}.
+	 *
+	 * @param Context\ArrayElementContext $context The parse tree.
+	 *
+	 * @return mixed The visitor result.
+	 */
+	public function visitArrayElement(Context\ArrayElementContext $context);
 
 	/**
 	 * Visit a parse tree produced by {@see GrammarParser::identifierList()}.

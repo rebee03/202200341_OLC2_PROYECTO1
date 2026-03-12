@@ -1,5 +1,20 @@
 {
+    "name": "golampi/interpreter",
+    "description": "Golampi Interpreter - OLC2",
+    "type": "project",
     "require": {
         "antlr/antlr4-php-runtime": "^0.9.1"
+    },
+    "autoload": {
+        "psr-4": {
+            "": "src/"
+        },
+        "files": [
+            "ANTLRv4/GrammarLexer.php",
+            "ANTLRv4/GrammarParser.php",
+            "ANTLRv4/GrammarVisitor.php",
+            "ANTLRv4/GrammarBaseVisitor.php"
+        ]
     }
 }
+

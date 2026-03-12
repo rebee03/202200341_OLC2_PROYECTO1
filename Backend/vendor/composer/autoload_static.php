@@ -6,6 +6,13 @@ namespace Composer\Autoload;
 
 class ComposerStaticInit1e8779a1b732f6181b7084135c6b23d9
 {
+    public static $files = array (
+        '0ac2d22dd6bc7a7735249047b4f8e406' => __DIR__ . '/../..' . '/ANTLRv4/GrammarLexer.php',
+        '2538158d5c224855fac5aa083c59ee35' => __DIR__ . '/../..' . '/ANTLRv4/GrammarParser.php',
+        'b5f8187e5d202d792cc1c45bb52dfa29' => __DIR__ . '/../..' . '/ANTLRv4/GrammarVisitor.php',
+        '07343618d36598d92910e074db276325' => __DIR__ . '/../..' . '/ANTLRv4/GrammarBaseVisitor.php',
+    );
+
     public static $prefixLengthsPsr4 = array (
         'P' => 
         array (
@@ -28,6 +35,10 @@ class ComposerStaticInit1e8779a1b732f6181b7084135c6b23d9
         ),
     );
 
+    public static $fallbackDirsPsr4 = array (
+        0 => __DIR__ . '/../..' . '/src',
+    );
+
     public static $classMap = array (
         'Composer\\InstalledVersions' => __DIR__ . '/..' . '/composer/InstalledVersions.php',
     );
@@ -37,6 +48,7 @@ class ComposerStaticInit1e8779a1b732f6181b7084135c6b23d9
         return \Closure::bind(function () use ($loader) {
             $loader->prefixLengthsPsr4 = ComposerStaticInit1e8779a1b732f6181b7084135c6b23d9::$prefixLengthsPsr4;
             $loader->prefixDirsPsr4 = ComposerStaticInit1e8779a1b732f6181b7084135c6b23d9::$prefixDirsPsr4;
+            $loader->fallbackDirsPsr4 = ComposerStaticInit1e8779a1b732f6181b7084135c6b23d9::$fallbackDirsPsr4;
             $loader->classMap = ComposerStaticInit1e8779a1b732f6181b7084135c6b23d9::$classMap;
 
         }, null, ClassLoader::class);
