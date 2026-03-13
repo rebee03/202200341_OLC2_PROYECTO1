@@ -245,71 +245,9 @@ WS            : [ \t\r\n]+ -> skip ;
 
 ## 3. Diagrama de Clases
 
-```
-classDiagram
 
-class index_php {
-    Entry Point
-}
+![driagr](https://i.ibb.co/C5sjn8K1/diagr1.png)
 
-class GrammarLexer {
-    <<ANTLR4>>
-}
-
-class GrammarParser {
-    <<ANTLR4>>
-}
-
-class ParseTree
-
-class Interpreter {
-    +visitProgram()
-    +execBlock()
-    +execStatement()
-    +evalExpr()
-    +evalPrimary()
-    +evalCall()
-    +callFunction()
-}
-
-class Environment {
-    -values : array
-    -parent : Environment
-    +declare()
-    +get()
-    +assign()
-    +getType()
-    +exists()
-    +existsLocal()
-    +getAll()
-}
-
-class FlowTypes {
-    +BreakSignal
-    +ContinueSignal
-    +ReturnSignal
-    -value : mixed
-}
-
-class Natives {
-    +fmtPrintln()
-    +len()
-    +now()
-    +substr()
-    +typeOf()
-}
-
-index_php --> GrammarLexer
-index_php --> GrammarParser
-GrammarParser --> ParseTree
-ParseTree --> Interpreter
-
-Interpreter --> Environment : uses
-Interpreter --> FlowTypes : control
-Interpreter --> Natives : builtins
-
-Environment --> Environment : parent scope
-```
 
 ### Relaciones entre clases
 
@@ -328,45 +266,10 @@ Environment --> Environment : parent scope
 
 El siguiente diagrama muestra cómo se construye y consulta la tabla de símbolos durante la ejecución:
 
-```
-flowchart TD
 
-A["Inicio: visitProgram()"]
 
-A --> B["FASE 1: Hoisting de funciones<br/>Registrar funciones en functions[]<br/>addSymbol(nombre,'función','global')"]
+![driagr](https://i.ibb.co/zhKthTwT/diagr2.png)
 
-B --> C["FASE 2: Declaraciones globales<br/>Evaluar expresión<br/>Environment::declare()<br/>addSymbol()"]
-
-C --> D{"¿Existe función main?"}
-
-D -- No --> E["addError(): No existe main"]
-
-D -- Sí --> F["callFunction('main', [])"]
-
-F --> G["Crear Environment local<br/>parent = global"]
-
-G --> H["Registrar parámetros<br/>local::declare()<br/>addSymbol()"]
-
-H --> I["execBlock()"]
-
-I --> J["Ejecución de sentencias"]
-
-J --> K["varDecl local<br/>env::declare()<br/>addSymbol()"]
-
-J --> L["shortVarDecl :=<br/>inferType()<br/>declare/assign<br/>addSymbol()"]
-
-J --> M["assignment (=, +=, etc.)<br/>env::get()<br/>applyAssignOp()<br/>env::assign()"]
-
-K --> N["Resolución de scopes"]
-L --> N
-M --> N
-
-N --> O["Environment::get()<br/>Busca en scope actual<br/>Luego parent<br/>Si no existe → error"]
-
-O --> P["Environment::assign()<br/>Actualiza en scope actual<br/>o en parent"]
-
-P --> Q["Resultado final<br/>symbols[]<br/>errors[]<br/>output[]"]
-```
 
 ### Estructura de un símbolo en la tabla
 
@@ -396,19 +299,31 @@ P --> Q["Resultado final<br/>symbols[]<br/>errors[]<br/>output[]"]
 ## 5. Arquitectura del Sistema
 
 ```
-flowchart TD
-
-A["Código fuente (.go)"]
-
-A --> B["GrammarLexer<br/>ANTLRv4 PHP<br/>Análisis léxico<br/>Genera tokens"]
-
-B --> C["GrammarParser<br/>ANTLRv4 PHP<br/>Análisis sintáctico<br/>Genera AST"]
-
-C --> D["Interpreter<br/>Visitor PHP<br/>Análisis semántico<br/>Ejecución"]
-
-D --> E["output[]<br/>Salida de consola"]
-D --> F["errors[]<br/>Tabla de errores"]
-D --> G["symbols[]<br/>Tabla de símbolos"]
+Código fuente (.go)
+       │
+       ▼
+┌─────────────────┐
+│  GrammarLexer   │  Análisis léxico — genera tokens
+│  (ANTLRv4/PHP)  │  Detecta errores léxicos
+└────────┬────────┘
+         │ TokenStream
+         ▼
+┌─────────────────┐
+│  GrammarParser  │  Análisis sintáctico — genera AST
+│  (ANTLRv4/PHP)  │  Detecta errores sintácticos
+└────────┬────────┘
+         │ ParseTree (AST)
+         ▼
+┌─────────────────┐
+│  Interpreter    │  Análisis semántico + Ejecución
+│  (Visitor PHP)  │  Valida tipos, scopes, operaciones
+│                 │  Ejecuta sentencias y expresiones
+└────────┬────────┘
+         │
+    ┌────┴────┐
+    ▼         ▼
+ output[]   errors[]   symbols[]
+ (consola)  (errores)  (tabla de símbolos)
 ```
 
 ---

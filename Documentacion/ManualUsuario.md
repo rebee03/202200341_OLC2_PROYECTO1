@@ -125,21 +125,9 @@ Para detener el servidor: presionar `Ctrl + C` en la terminal.
 
 La interfaz está dividida en cuatro secciones principales:
 
-```
-┌──────────────────────────────────────────────────────────────┐
-│  🦙 Golampi Interpreter  [Nuevo] [Cargar] [Guardar] [▶ Ejecutar] [✕ Limpiar]  │
-├──────────────────────────────────────┬───────────────────────┤
-│                                      │   Consola de Salida   │
-│         Editor de Código             │                       │
-│                                      │   (resultados aquí)   │
-│   1 │ func main() {                  ├───────────────────────┤
-│   2 │   fmt.Println("Hola")          │       Reportes        │
-│   3 │ }                              │                       │
-│                                      │  [📄 Descargar result]│
-│                                      │  [⚠️ Descargar errores]│
-│                                      │  [📊 Tabla símbolos]  │
-└──────────────────────────────────────┴───────────────────────┘
-```
+![diagr](https://i.ibb.co/PZWC941p/Captura-desde-2026-03-12-23-57-25.png)
+
+![diagram](https://i.ibb.co/Gv0QCjvC/Captura-desde-2026-03-12-23-55-56.png)
 
 ### Barra de acciones
 
