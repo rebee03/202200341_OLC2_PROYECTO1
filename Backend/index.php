@@ -145,13 +145,13 @@ HTML;
      BARRA DE ACCIONES
 ══════════════════════════════════════════════ -->
 <header class="toolbar">
-    <span class="toolbar-title">🦙 Golampi Interpreter</span>
+    <span class="toolbar-title"> ▶ Golampi Interpreter</span>
     <div class="toolbar-actions">
-        <button type="button" onclick="newFile()"       class="btn btn-secondary">📄 Nuevo</button>
-        <button type="button" onclick="loadFile()"      class="btn btn-secondary">📂 Cargar archivo</button>
+        <button type="button" onclick="newFile()"       class="btn btn-secondary"> Nuevo</button>
+        <button type="button" onclick="loadFile()"      class="btn btn-secondary"> Cargar archivo</button>
         <input  type="file"   id="fileInput" accept=".go,.glp,.txt" style="display:none"
                 onchange="handleFileLoad(event)">
-        <button type="button" onclick="saveFile()"      class="btn btn-secondary">💾 Guardar código</button>
+        <button type="button" onclick="saveFile()"      class="btn btn-secondary"> Guardar código</button>
         <button type="button" onclick="submitRun()"     class="btn btn-primary">▶ Ejecutar</button>
         <button type="button" onclick="clearConsole()"  class="btn btn-danger">✕ Limpiar consola</button>
     </div>

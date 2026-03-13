@@ -2,6 +2,8 @@
 **Organización de Lenguajes y Compiladores 2**  
 **Universidad San Carlos de Guatemala — Facultad de Ingeniería**  
 **Curso: Organización de Lenguajes y Compiladores 2**
+**Rebeca Ayline Torres Del Cid**
+**Carnet: 202200341**
 
 ---
 
@@ -244,43 +246,69 @@ WS            : [ \t\r\n]+ -> skip ;
 ## 3. Diagrama de Clases
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│                        index.php                                 │
-│  ┌──────────────┐   ┌──────────────┐   ┌──────────────────────┐ │
-│  │ GrammarLexer │──▶│ GrammarParser│──▶│  Interpreter         │ │
-│  │  (ANTLR4)    │   │  (ANTLR4)    │   │  + visitProgram()    │ │
-│  └──────────────┘   └──────────────┘   │  + execBlock()       │ │
-│                            │            │  + execStatement()   │ │
-│                            │ AST        │  + evalExpr()        │ │
-│                            ▼            │  + evalPrimary()     │ │
-│                     ┌────────────┐      │  + evalCall()        │ │
-│                     │ ParseTree  │      │  + callFunction()    │ │
-│                     └────────────┘      └──────────┬───────────┘ │
-└─────────────────────────────────────────────────────┼───────────┘
-                                                       │ usa
-              ┌────────────────────────────────────────┼──────────┐
-              │                                        │          │
-              ▼                                        ▼          ▼
-┌─────────────────────┐              ┌──────────────────┐  ┌────────────┐
-│    Environment      │              │   FlowTypes      │  │  Natives   │
-│─────────────────────│              │──────────────────│  │────────────│
-│ - values: array     │              │ + BreakSignal    │  │ + fmtPrintln│
-│ - parent: ?self     │              │ + ContinueSignal │  │ + len()    │
-│─────────────────────│              │ + ReturnSignal   │  │ + now()    │
-│ + declare()         │              │   - value: mixed │  │ + substr() │
-│ + get()             │              └──────────────────┘  │ + typeOf() │
-│ + assign()          │                                     └────────────┘
-│ + getType()         │
-│ + exists()          │
-│ + existsLocal()     │
-│ + getAll()          │
-└─────────────────────┘
-         ▲
-         │ parent →
-┌─────────────────────┐
-│  Environment (local)│  ← scope de función/bloque
-│  parent = global    │
-└─────────────────────┘
+classDiagram
+
+class index_php {
+    Entry Point
+}
+
+class GrammarLexer {
+    <<ANTLR4>>
+}
+
+class GrammarParser {
+    <<ANTLR4>>
+}
+
+class ParseTree
+
+class Interpreter {
+    +visitProgram()
+    +execBlock()
+    +execStatement()
+    +evalExpr()
+    +evalPrimary()
+    +evalCall()
+    +callFunction()
+}
+
+class Environment {
+    -values : array
+    -parent : Environment
+    +declare()
+    +get()
+    +assign()
+    +getType()
+    +exists()
+    +existsLocal()
+    +getAll()
+}
+
+class FlowTypes {
+    +BreakSignal
+    +ContinueSignal
+    +ReturnSignal
+    -value : mixed
+}
+
+class Natives {
+    +fmtPrintln()
+    +len()
+    +now()
+    +substr()
+    +typeOf()
+}
+
+index_php --> GrammarLexer
+index_php --> GrammarParser
+GrammarParser --> ParseTree
+ParseTree --> Interpreter
+
+Interpreter --> Environment : uses
+Interpreter --> FlowTypes : control
+Interpreter --> Natives : builtins
+
+Environment --> Environment : parent scope
 ```
 
 ### Relaciones entre clases
@@ -301,89 +329,43 @@ WS            : [ \t\r\n]+ -> skip ;
 El siguiente diagrama muestra cómo se construye y consulta la tabla de símbolos durante la ejecución:
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│                    INICIO: visitProgram()                        │
-└──────────────────────────────┬──────────────────────────────────┘
-                               │
-                               ▼
-┌─────────────────────────────────────────────────────────────────┐
-│              FASE 1: HOISTING DE FUNCIONES                       │
-│  Para cada functionDecl en el programa:                          │
-│    → Registrar nombre en $this->functions[]                      │
-│    → addSymbol(nombre, 'función', 'global', '—', línea, col)     │
-└──────────────────────────────┬──────────────────────────────────┘
-                               │
-                               ▼
-┌─────────────────────────────────────────────────────────────────┐
-│           FASE 2: DECLARACIONES GLOBALES                         │
-│  Para cada varDecl / constDecl global:                           │
-│    → Evaluar expresión de inicialización                         │
-│    → Environment::declare(nombre, valor, tipo)                   │
-│    → addSymbol(nombre, tipo, 'global', valor, línea, col)        │
-└──────────────────────────────┬──────────────────────────────────┘
-                               │
-                               ▼
-               ┌───────────────────────────────┐
-               │   ¿Existe función 'main'?      │
-               └───────────┬───────────────────┘
-                    NO ▼   │ SÍ
-          ┌────────────┐   │
-          │addError()  │   ▼
-          │"No existe  │  callFunction('main', [])
-          │ main"      │        │
-          └────────────┘        │
-                                ▼
-┌─────────────────────────────────────────────────────────────────┐
-│                EJECUCIÓN DE FUNCIÓN                              │
-│  1. Crear Environment local (parent = global)                    │
-│  2. Para cada parámetro:                                         │
-│     → local::declare(nombre, valor_arg, tipo)                    │
-│     → addSymbol(nombre, tipo, nombre_función, valor, l, c)       │
-│  3. execBlock(block, local, nombre_función)                      │
-└──────────────────────────────┬──────────────────────────────────┘
-                               │
-                               ▼
-┌─────────────────────────────────────────────────────────────────┐
-│                 EJECUCIÓN DE SENTENCIAS                          │
-│                                                                  │
-│  varDecl local:                                                  │
-│    → env::declare(nombre, valor, tipo)                           │
-│    → addSymbol(nombre, tipo, scope, valor, l, c)                 │
-│                                                                  │
-│  shortVarDecl (:=):                                              │
-│    → inferType() desde el nodo de expresión                      │
-│    → env::declare() o env::assign()                              │
-│    → addSymbol(nombre, tipo_inferido, scope, valor, l, c)        │
-│                                                                  │
-│  assignment (=, +=, etc.):                                       │
-│    → env::get() para obtener valor actual                        │
-│    → applyAssignOp()                                             │
-│    → env::assign() — NO agrega a tabla de símbolos              │
-└──────────────────────────────┬──────────────────────────────────┘
-                               │
-                               ▼
-┌─────────────────────────────────────────────────────────────────┐
-│               RESOLUCIÓN DE SCOPES                               │
-│                                                                  │
-│  Environment::get(nombre):                                       │
-│    → ¿Existe en scope actual?  → retornar valor                  │
-│    → ¿Tiene parent?            → buscar en parent               │
-│    → No encontrado             → RuntimeException               │
-│                                                                  │
-│  Environment::assign(nombre):                                    │
-│    → ¿Existe en scope actual?  → actualizar aquí                 │
-│    → ¿Tiene parent?            → actualizar en parent           │
-│    → No encontrado             → RuntimeException               │
-└──────────────────────────────┬──────────────────────────────────┘
-                               │
-                               ▼
-┌─────────────────────────────────────────────────────────────────┐
-│                    RESULTADO FINAL                                │
-│                                                                  │
-│  $interpreter->symbols[]  → Tabla de símbolos completa          │
-│  $interpreter->errors[]   → Tabla de errores                    │
-│  $interpreter->output[]   → Salida de consola                   │
-└─────────────────────────────────────────────────────────────────┘
+flowchart TD
+
+A["Inicio: visitProgram()"]
+
+A --> B["FASE 1: Hoisting de funciones<br/>Registrar funciones en functions[]<br/>addSymbol(nombre,'función','global')"]
+
+B --> C["FASE 2: Declaraciones globales<br/>Evaluar expresión<br/>Environment::declare()<br/>addSymbol()"]
+
+C --> D{"¿Existe función main?"}
+
+D -- No --> E["addError(): No existe main"]
+
+D -- Sí --> F["callFunction('main', [])"]
+
+F --> G["Crear Environment local<br/>parent = global"]
+
+G --> H["Registrar parámetros<br/>local::declare()<br/>addSymbol()"]
+
+H --> I["execBlock()"]
+
+I --> J["Ejecución de sentencias"]
+
+J --> K["varDecl local<br/>env::declare()<br/>addSymbol()"]
+
+J --> L["shortVarDecl :=<br/>inferType()<br/>declare/assign<br/>addSymbol()"]
+
+J --> M["assignment (=, +=, etc.)<br/>env::get()<br/>applyAssignOp()<br/>env::assign()"]
+
+K --> N["Resolución de scopes"]
+L --> N
+M --> N
+
+N --> O["Environment::get()<br/>Busca en scope actual<br/>Luego parent<br/>Si no existe → error"]
+
+O --> P["Environment::assign()<br/>Actualiza en scope actual<br/>o en parent"]
+
+P --> Q["Resultado final<br/>symbols[]<br/>errors[]<br/>output[]"]
 ```
 
 ### Estructura de un símbolo en la tabla
@@ -414,31 +396,19 @@ El siguiente diagrama muestra cómo se construye y consulta la tabla de símbolo
 ## 5. Arquitectura del Sistema
 
 ```
-Código fuente (.go)
-       │
-       ▼
-┌─────────────────┐
-│  GrammarLexer   │  Análisis léxico — genera tokens
-│  (ANTLRv4/PHP)  │  Detecta errores léxicos
-└────────┬────────┘
-         │ TokenStream
-         ▼
-┌─────────────────┐
-│  GrammarParser  │  Análisis sintáctico — genera AST
-│  (ANTLRv4/PHP)  │  Detecta errores sintácticos
-└────────┬────────┘
-         │ ParseTree (AST)
-         ▼
-┌─────────────────┐
-│  Interpreter    │  Análisis semántico + Ejecución
-│  (Visitor PHP)  │  Valida tipos, scopes, operaciones
-│                 │  Ejecuta sentencias y expresiones
-└────────┬────────┘
-         │
-    ┌────┴────┐
-    ▼         ▼
- output[]   errors[]   symbols[]
- (consola)  (errores)  (tabla de símbolos)
+flowchart TD
+
+A["Código fuente (.go)"]
+
+A --> B["GrammarLexer<br/>ANTLRv4 PHP<br/>Análisis léxico<br/>Genera tokens"]
+
+B --> C["GrammarParser<br/>ANTLRv4 PHP<br/>Análisis sintáctico<br/>Genera AST"]
+
+C --> D["Interpreter<br/>Visitor PHP<br/>Análisis semántico<br/>Ejecución"]
+
+D --> E["output[]<br/>Salida de consola"]
+D --> F["errors[]<br/>Tabla de errores"]
+D --> G["symbols[]<br/>Tabla de símbolos"]
 ```
 
 ---

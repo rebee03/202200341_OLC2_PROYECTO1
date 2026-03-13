@@ -1,6 +1,9 @@
 # Manual de Usuario — Golampi Interpreter
 **Organización de Lenguajes y Compiladores 2**  
 **Universidad San Carlos de Guatemala — Facultad de Ingeniería**
+**Curso: Organización de Lenguajes y Compiladores 2**
+**Rebeca Ayline Torres Del Cid**
+**Carnet: 202200341**
 
 ---
 
