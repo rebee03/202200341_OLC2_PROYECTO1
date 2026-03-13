@@ -137,7 +137,7 @@ HTML;
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Golampi Interpreter — OLC2</title>
-    <link rel="stylesheet" href="/static/style.css">
+    <link rel="stylesheet" href="/Frontend/style.css">
 </head>
 <body>
 
@@ -260,7 +260,7 @@ HTML;
     <textarea name="code" id="runCode"></textarea>
 </form>
 
-<script src="/static/script.js"></script>
+<script src="/Frontend/script.js"></script>
 <script>
 // ── Funciones de la barra de acciones ──────────────────────────
 function newFile() {

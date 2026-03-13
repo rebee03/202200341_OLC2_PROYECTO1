@@ -14,11 +14,20 @@ class Natives {
     }
 
     // len — longitud de string o arreglo
-    public static function len(mixed $val): int {
+
+    public static function len(mixed $val): int
+    {
+        // error_log("len() val type: " . gettype($val) . " val: " . print_r($val, true));
         if (is_string($val)) return mb_strlen($val);
         if (is_array($val))  return count($val);
         throw new RuntimeException("len() requiere un string o arreglo.");
     }
+
+    /*public static function len(mixed $val): int {
+        if (is_string($val)) return mb_strlen($val);
+        if (is_array($val))  return count($val);
+        throw new RuntimeException("len() requiere un string o arreglo.");
+    }*/
 
     // now — fecha y hora actual
     public static function now(): string {

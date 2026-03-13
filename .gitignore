@@ -1,1 +1,9 @@
+# Composer
+/vendor/
+**/vendor/
 
+# ANTLR
+/.antlr/
+**/.antlr/
+
+.gitignore
