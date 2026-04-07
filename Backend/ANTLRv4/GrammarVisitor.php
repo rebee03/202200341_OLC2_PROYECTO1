@@ -228,6 +228,15 @@ interface GrammarVisitor extends ParseTreeVisitor
 	public function visitCaseClause(Context\CaseClauseContext $context);
 
 	/**
+	 * Visit a parse tree produced by {@see GrammarParser::caseExprList()}.
+	 *
+	 * @param Context\CaseExprListContext $context The parse tree.
+	 *
+	 * @return mixed The visitor result.
+	 */
+	public function visitCaseExprList(Context\CaseExprListContext $context);
+
+	/**
 	 * Visit a parse tree produced by {@see GrammarParser::defaultClause()}.
 	 *
 	 * @param Context\DefaultClauseContext $context The parse tree.

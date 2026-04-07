@@ -149,7 +149,11 @@ switchStmt
     ;
 
 caseClause
-    : CASE expressionList ':' statement*
+    : CASE caseExprList ':' statement*
+    ;
+
+caseExprList
+    : expression (PIPE expression)*
     ;
 
 defaultClause
@@ -307,6 +311,8 @@ RUNE_LIT : '\'' ( '\\' . | ~[\\'\r\n] ) '\'' ;
 // ─────────────────────────────────────────
 
 // Identificador: empieza con letra o _, seguido de letras/dígitos/_
+PIPE : '|' ;
+
 ID : [a-zA-Z_][a-zA-Z0-9_]* ;
 
 // Comentarios (ignorados)

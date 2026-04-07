@@ -520,9 +520,9 @@ class Interpreter extends GrammarBaseVisitor
             : true;
 
         foreach ($ctx->caseClause() as $clause) {
-            $exprs = $clause->expressionList()->expression();
+            // Ahora usamos caseExprList en lugar de expressionList
             $match = false;
-            foreach ($exprs as $e) {
+            foreach ($clause->caseExprList()->expression() as $e) {
                 if ($this->evalExpr($e, $env) == $switchVal) {
                     $match = true;
                     break;
@@ -536,7 +536,7 @@ class Interpreter extends GrammarBaseVisitor
                     if ($result instanceof ReturnSignal)   return $result;
                     if ($result instanceof ContinueSignal) return $result;
                 }
-                return null; // Sin fallthrough
+                return null;
             }
         }
 
