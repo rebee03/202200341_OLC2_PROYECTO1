@@ -193,6 +193,7 @@ unaryExpr
 binaryOp
     : '||'
     | '&&'
+    | XOR
     | relOp
     | addOp
     | mulOp
@@ -311,6 +312,9 @@ RUNE_LIT : '\'' ( '\\' . | ~[\\'\r\n] ) '\'' ;
 // ─────────────────────────────────────────
 
 // Identificador: empieza con letra o _, seguido de letras/dígitos/_
+
+XOR : '^^' ;
+
 PIPE : '|' ;
 
 ID : [a-zA-Z_][a-zA-Z0-9_]* ;

@@ -675,6 +675,7 @@ class Interpreter extends GrammarBaseVisitor
             '<=' => $left <= $right,
             '>'  => $left > $right,
             '>=' => $left >= $right,
+            '^^' => (bool)$left xor (bool)$right,
             default => throw new RuntimeException("Operador desconocido: $op")
         };
     }
